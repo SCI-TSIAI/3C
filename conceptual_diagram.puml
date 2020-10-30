@@ -1,0 +1,38 @@
+@startuml
+
+entity user {
+    * id
+    --
+    * username
+    * password_hash
+    * salt
+    * user_search_datas
+    * user_dashboards
+    * group
+    * preferences
+    * last_login
+    * created_at
+}
+
+entity user_search_data {
+    * id
+    --
+    * longitude
+    * latitude
+    * begin_date
+    * end_date
+    * created_at
+}
+
+entity user_dashboard {
+    * id
+    --
+    * longitude
+    * latitude
+    * position
+}
+
+user --|{ user_search_data
+user --|{ user_dashboard
+
+@enduml
