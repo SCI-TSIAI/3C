@@ -33,6 +33,7 @@ entity group_permission{
 entity user_search_data {
     * id: serial
     --
+    * user_id: bigint unsigned
     * longitude: float(10,6)
     * latitude: float(10,6)
     * begin_date: timestamp
@@ -51,6 +52,7 @@ entity user_preference{
 entity user_dashboard {
     * id
     --
+    * user_id: unsigned bigint
     * longitude: float(10,6)
     * latitude: float(10,6)
     * position: smallint
