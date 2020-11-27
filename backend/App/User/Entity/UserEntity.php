@@ -1,27 +1,7 @@
 <?php
 
-class DatabaseConnection {
 
-    private static $databaseConnection;
-
-    //TODO Consider to move it to configuration
-    const DSN = "mysql:host=172.17.0.2;dbname=weather_service";
-    const DATABASE_USERNAME = "root";
-    const DATABASE_PASSWORD = "root";
-
-    public static function getInstance() {
-
-        if (!self::$databaseConnection) {
-            self::$databaseConnection = new PDO(
-                self::DSN,
-                self::DATABASE_USERNAME,
-                self::DATABASE_PASSWORD
-            );
-        }
-
-        return self::$databaseConnection;
-    }
-}
+namespace App\User\Entity;
 
 
 class UserEntity {
@@ -129,37 +109,3 @@ class UserEntity {
         return $this;
     }
 }
-
-class UserRepository {
-
-    private $databaseConnection;
-
-    /**
-     * UserRepository constructor.
-     */
-    public function __construct() {
-        $this->databaseConnection = DatabaseConnection::getInstance();
-    }
-
-    /**
-     * @param $id
-     * @return UserEntity
-     */
-    public function getUserById($id) {
-        $query = $this->databaseConnection->prepare("Select * from user where id=:id");
-
-        $query->execute(array(":id" => $id));
-
-        $result = $query->fetchAll(PDO::FETCH_CLASS, $this->getEntityName());
-
-        return $result;
-    }
-
-    protected function getEntityName() {
-        return "UserEntity";
-    }
-}
-
-$userRepository = new UserRepository();
-
-$userEntity = $userRepository->getUserById(1);

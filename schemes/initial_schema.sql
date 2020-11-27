@@ -1,6 +1,8 @@
 -- DROP SCHEMA IF EXISTS weather_service
 CREATE SCHEMA IF NOT EXISTS weather_service;
 
+SET SQL_MODE='ALLOW_INVALID_DATES';
+
 -- DROP TABLE IF EXISTS weather_service.group
 CREATE TABLE IF NOT EXISTS weather_service.group
 (
