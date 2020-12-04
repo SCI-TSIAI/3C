@@ -4,12 +4,15 @@
 namespace App\User\Entity;
 
 
-class UserEntity {
+use App\Database\Entity\Entity;
+
+class UserEntity extends Entity {
 
     private $id;
     private $group_id;
     private $username;
     private $password;
+    private $salt;
     private $last_login;
     private $created_at;
 
@@ -18,15 +21,6 @@ class UserEntity {
      */
     public function getId() {
         return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     * @return UserEntity
-     */
-    public function setId($id) {
-        $this->id = $id;
-        return $this;
     }
 
     /**
@@ -106,6 +100,21 @@ class UserEntity {
      */
     public function setCreatedAt($created_at) {
         $this->created_at = $created_at;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSalt() {
+        return $this->salt;
+    }
+
+    /**
+     * @param mixed $salt
+     */
+    public function setSalt($salt) {
+        $this->salt = $salt;
         return $this;
     }
 }
