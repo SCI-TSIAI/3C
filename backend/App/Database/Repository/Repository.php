@@ -68,9 +68,7 @@ abstract class Repository {
      * @throws \ReflectionException
      */
     private function performSave(Entity $entity) {
-
         $fields = ReflectionUtils::getObjectPrivateFields($entity);
-
         $fields = self::removeNullValuesFromAssoc($fields);
 
         $fieldNamesString = implode(", ", array_keys($fields));
