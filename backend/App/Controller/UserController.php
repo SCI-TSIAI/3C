@@ -3,46 +3,67 @@
 
 namespace App\Controller;
 
+use App\Router\RestBodyReader;
+use App\Router\TestClass;
+
+/**
+ * @Controller(path="/user")
+ */
 class UserController {
 
-    public function getUsersAction() {
-        echo json_encode(array(
-            array(
-                "first_name" => "Igor",
-                "last_name" => "Maculewicz",
-                "age" => "26"
-            ),
-            array(
-                "first_name" => "Adaś",
-                "last_name" => "Kowalski",
-                "age" => "35"
-            ),
-            array(
-                "first_name" => "Marek",
-                "last_name" => "Nowak",
-                "age" => "14"
-            ),
-            array(
-                "first_name" => "Marta",
-                "last_name" => "Testowska",
-                "age" => "64"
-            )
-        ));
+    /**
+     * @Action(method="GET")
+     */
+    public function getUsers() {
+        echo json_encode(array("test" => "test"));
     }
 
-    public function getUserAction($id) {
-        echo json_encode(array("message" => "Testowa wiadomość"));
+    /**
+     * @Action(method="GET", path="/test")
+     */
+    public function testAction() {
+        echo json_encode(array("test" => "sdaasda"));
     }
 
-    public function addUserAction() {
-        echo "Added user";
+    /**
+     * @Action(method="POST")
+     */
+    public
+    function addUser() {
+
+        /** @var TestClass $request */
+        $request = RestBodyReader::readBody(TestClass::class);
+
+
+        if (empty($request->getTest())) {
+            echo json_encode(array("type" => "error", "message" => "test parameter is required!"));
+            return;
+        }
+
+        echo json_encode(array("message" => "Added user successfully!"));
     }
 
-    public function updateUserAction($id) {
+    /**
+     * @Action(method="GET", path="/{id}")
+     */
+    public
+    function getUser($id) {
+        echo sprintf("Obtained user with id: %s", $id);
+    }
+
+    /**
+     * @Action(method="PUT", path="/{id}")
+     */
+    public
+    function updateUser($id) {
         echo sprintf("Updated user with id: %s", $id);
     }
 
-    public function deleteUserAction($id) {
+    /**
+     * @Action(method="DELETE", path="/{id}")
+     */
+    public
+    function deleteUser($id) {
         echo sprintf("Deleted user with id: %s", $id);
     }
 }
