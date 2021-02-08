@@ -4,17 +4,17 @@
 namespace App\Database\Repository;
 
 
-use App\Database\DatabaseConnection;
+use App\Database\DatabaseConnector;
 use App\Database\Entity\Entity;
 use App\Helpers\ReflectionUtils;
 use PDO;
 
 abstract class Repository {
 
-    private $databaseConnection;
+    protected $databaseConnection;
 
     public function __construct() {
-        $this->databaseConnection = DatabaseConnection::getInstance();
+        $this->databaseConnection = DatabaseConnector::getInstance();
         $this->databaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
     }
 
@@ -51,10 +51,6 @@ abstract class Repository {
         return $result;
     }
 
-    protected abstract function getEntityName();
-
-    protected abstract function getTableName();
-
     protected function prepare($statement) {
         $query = $this->databaseConnection->prepare($statement);
         $query->setFetchMode(PDO::FETCH_CLASS, $this->getEntityName());
@@ -62,13 +58,19 @@ abstract class Repository {
         return $query;
     }
 
+    protected abstract function getEntityName();
+
+    protected abstract function getTableName();
+
     /**
      * @param Entity $entity
      * @return null
      * @throws \ReflectionException
      */
     private function performSave(Entity $entity) {
+
         $fields = ReflectionUtils::getObjectPrivateFields($entity);
+
         $fields = self::removeNullValuesFromAssoc($fields);
 
         $fieldNamesString = implode(", ", array_keys($fields));

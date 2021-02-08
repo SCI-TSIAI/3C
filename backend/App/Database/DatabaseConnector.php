@@ -6,7 +6,7 @@ namespace App\Database;
 
 use PDO;
 
-class DatabaseConnection {
+class DatabaseConnector {
 
     private static $databaseConnection;
 
