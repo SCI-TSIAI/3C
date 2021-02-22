@@ -6,7 +6,7 @@ namespace App\Database\Repository;
 
 use App\Database\DatabaseConnector;
 use App\Database\Entity\Entity;
-use App\Helpers\ReflectionUtils;
+use App\Helpers\ReflectionHelper;
 use PDO;
 
 abstract class Repository {
@@ -69,7 +69,7 @@ abstract class Repository {
      */
     private function performSave(Entity $entity) {
 
-        $fields = ReflectionUtils::getObjectPrivateFields($entity);
+        $fields = ReflectionHelper::getObjectPrivateFields($entity);
 
         $fields = self::removeNullValuesFromAssoc($fields);
 

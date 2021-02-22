@@ -5,7 +5,7 @@ namespace App\User\Controller;
 
 use App\Router\RestBodyReader;
 use App\Serializer\JsonSerializer;
-use App\User\Model\AddUserRequest;
+use App\User\Model\UserRequest;
 use App\User\Service\UserService;
 
 /**
@@ -24,6 +24,7 @@ class UserController {
 
 
     /**
+     * @Authorized(permission="GET_USER_PERMISSION")
      * @Action(method="GET")
      */
     public function getUsers() {
@@ -35,8 +36,8 @@ class UserController {
      */
     public
     function addUser() {
-        /** @var AddUserRequest $userRequest */
-        $userRequest = RestBodyReader::readRequestBody(AddUserRequest::class);
+        /** @var UserRequest $userRequest */
+        $userRequest = RestBodyReader::readRequestBody(UserRequest::class);
 
         $createdUser = $this->userService->addUser($userRequest->getUsername(), $userRequest->getPassword());
 

@@ -42,4 +42,8 @@ class UserService {
 
         return EntityMapper::mapEntityToResponse($createdUser, UserModel::class);
     }
+
+    public function isUserWithPasswordExists($username, $password) {
+        return $this->userRepository->isUserWithPasswordExists($username, $password);
+    }
 }

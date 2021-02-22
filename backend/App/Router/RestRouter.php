@@ -1,6 +1,8 @@
 <?php namespace App\Router;
 
-use App\Helpers\ReflectionUtils;
+use App\Helpers\HttpHeadersHelper;
+use App\Helpers\JwtHelper;
+use App\Helpers\ReflectionHelper;
 use Bramus\Router\Router;
 use HaydenPierce\ClassFinder\ClassFinder;
 use ReflectionClass;
@@ -9,6 +11,7 @@ use zpt\anno\Annotations;
 class RestRouter {
 
     const CONTROLLER_ANNOTATION_NAME = "Controller";
+    const AUTHORIZED_ANNOTATION_NAME = "Authorized";
     const ACTION_ANNOTATION_NAME = "Action";
     const PATH_PARAMETER_NAME = "path";
     const METHOD_PARAMETER_NAME = "method";
@@ -74,18 +77,22 @@ class RestRouter {
 
         $path = !empty($actionPath) ? $controllerPath . $actionPath : $controllerPath;
 
+        if ($methodAnnotations->hasAnnotation(self::AUTHORIZED_ANNOTATION_NAME)) {
+            self::registerAuthorization($actionMethod, $path);
+        }
+
         switch ($actionMethod) {
             case "GET":
-                self::$router->get($path, ReflectionUtils::getFullMethodIdentifier($methodReflector));
+                self::$router->get($path, ReflectionHelper::getFullMethodIdentifier($methodReflector));
                 break;
             case "POST":
-                self::$router->post($path, ReflectionUtils::getFullMethodIdentifier($methodReflector));
+                self::$router->post($path, ReflectionHelper::getFullMethodIdentifier($methodReflector));
                 break;
             case "PUT":
-                self::$router->put($path, ReflectionUtils::getFullMethodIdentifier($methodReflector));
+                self::$router->put($path, ReflectionHelper::getFullMethodIdentifier($methodReflector));
                 break;
             case "DELETE":
-                self::$router->delete($path, ReflectionUtils::getFullMethodIdentifier($methodReflector));
+                self::$router->delete($path, ReflectionHelper::getFullMethodIdentifier($methodReflector));
                 break;
             default:
                 throw new \Exception("Unhandled action method!");
@@ -98,5 +105,18 @@ class RestRouter {
         foreach ($classes as $class) {
             self::registerRoutes($class);
         }
+    }
+
+    private static function registerAuthorization($actionMethod, $path) {
+        self::$router->before($actionMethod, $path, function () {
+            $bearerToken = HttpHeadersHelper::getTokenForRequest();
+
+            $isTokenValid = JwtHelper::verifyToken($bearerToken);
+
+            if (!$isTokenValid) {
+                http_response_code(401);
+                die();
+            }
+        });
     }
 }

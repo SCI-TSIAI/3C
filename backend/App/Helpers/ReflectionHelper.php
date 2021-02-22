@@ -7,7 +7,7 @@ namespace App\Helpers;
 use ReflectionClass;
 use ReflectionProperty;
 
-class ReflectionUtils {
+class ReflectionHelper {
 
     /**
      * @param $object
